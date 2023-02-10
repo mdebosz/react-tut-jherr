@@ -1,34 +1,58 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import { useEffect, useState } from "react";
+import "./App.css";
+import { PokemonInfo } from "./components/PokemonInfo";
+import { Pokemon } from "./Pokemon";
+import { PokemonFilter } from "./components/PokemonFilter";
+import { PokemonTable } from "./components/PokemonTable";
+import { PokemonContext } from "./PokemonContext";
+
+// export const pokemonReducer = (state: any, action: any) => {
+//   switch (action.type) {
+//     case "setPokemon":
+//       return { ...state, pokemon: action.payload };
+//     case "setSelectedItem":
+//       return { ...state, selectedItem: action.payload };
+//     case "setFilter":
+//       return { ...state, filter: action.payload };
+//     default:
+//       throw new Error();
+//   }
+// };
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [filter, setFilter] = useState<string>("");
+  const [selectedItem, setSelectedItem] = useState<Pokemon | null>(null);
+  const [pokemon, setPokemon] = useState<Pokemon[]>([]);
+
+  useEffect(() => {
+    fetch("http://localhost:5173/pokemon.json").then((response) => {
+      response.json().then((pokemon) => {
+        setPokemon(pokemon);
+      });
+    });
+  }, []);
 
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <PokemonContext.Provider
+      value={{
+        filter,
+        pokemon,
+        selectedItem,
+        setFilter,
+        setPokemon,
+        setSelectedItem,
+      }}
+    >
+      <div className="w-[800px] pt-4 m-auto grid grid-cols-4 gap-2">
+        <div className="col-span-3">
+          <h1 className="text-center">Pokemon Search</h1>
+          <PokemonFilter />
+          <PokemonTable />
+        </div>
+        <div className="col-span-1">{<PokemonInfo />}</div>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
-  )
+    </PokemonContext.Provider>
+  );
 }
 
-export default App
+export default App;
