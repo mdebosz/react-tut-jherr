@@ -1,33 +1,34 @@
-import { useEffect, useState } from "react";
+import { useEffect, useReducer } from "react";
 import "./App.css";
 import { PokemonInfo } from "./components/PokemonInfo";
-import { Pokemon } from "./Pokemon";
 import { PokemonFilter } from "./components/PokemonFilter";
 import { PokemonTable } from "./components/PokemonTable";
 import { PokemonContext } from "./PokemonContext";
 
-// export const pokemonReducer = (state: any, action: any) => {
-//   switch (action.type) {
-//     case "setPokemon":
-//       return { ...state, pokemon: action.payload };
-//     case "setSelectedItem":
-//       return { ...state, selectedItem: action.payload };
-//     case "setFilter":
-//       return { ...state, filter: action.payload };
-//     default:
-//       throw new Error();
-//   }
-// };
+export const pokemonReducer = (state: any, action: any) => {
+  switch (action.type) {
+    case "setPokemon":
+      return { ...state, pokemon: action.payload };
+    case "setSelectedItem":
+      return { ...state, selectedItem: action.payload };
+    case "setFilter":
+      return { ...state, filter: action.payload };
+    default:
+      throw new Error();
+  }
+};
 
 function App() {
-  const [filter, setFilter] = useState<string>("");
-  const [selectedItem, setSelectedItem] = useState<Pokemon | null>(null);
-  const [pokemon, setPokemon] = useState<Pokemon[]>([]);
+  const [state, dispatch] = useReducer(pokemonReducer, {
+    filter: "",
+    pokemon: [],
+    selectedItem: null,
+  });
 
   useEffect(() => {
     fetch("http://localhost:5173/pokemon.json").then((response) => {
       response.json().then((pokemon) => {
-        setPokemon(pokemon);
+        dispatch({ type: "setPokemon", payload: pokemon });
       });
     });
   }, []);
@@ -35,12 +36,8 @@ function App() {
   return (
     <PokemonContext.Provider
       value={{
-        filter,
-        pokemon,
-        selectedItem,
-        setFilter,
-        setPokemon,
-        setSelectedItem,
+        state,
+        dispatch,
       }}
     >
       <div className="w-[800px] pt-4 m-auto grid grid-cols-4 gap-2">

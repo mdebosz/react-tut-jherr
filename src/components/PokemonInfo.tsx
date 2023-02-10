@@ -2,7 +2,9 @@ import { useContext } from "react";
 import { PokemonContext } from "../PokemonContext";
 
 export const PokemonInfo = () => {
-  const { selectedItem } = useContext(PokemonContext);
+  const {
+    state: { selectedItem },
+  } = useContext(PokemonContext);
 
   return selectedItem ? (
     <div className="mt-4">
