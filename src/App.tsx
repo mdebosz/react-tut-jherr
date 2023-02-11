@@ -1,10 +1,9 @@
-import { useEffect } from "react";
 import "./App.css";
 import { PokemonInfo } from "./components/PokemonInfo";
 import { PokemonFilter } from "./components/PokemonFilter";
 import { PokemonTable } from "./components/PokemonTable";
-import useStore, { PokemonState } from "./store";
-import { Pokemon } from "./Pokemon";
+import { observer } from "mobx-react";
+import store from "./store";
 
 // export const pokemonReducer = (state = initialState, action: any) => {
 //   switch (action.type) {
@@ -24,18 +23,7 @@ import { Pokemon } from "./Pokemon";
 // });
 
 function App() {
-  const pokemon = useStore<Pokemon[]>((state) => state.pokemon);
-  const setPokemon = useStore((state) => state.setPokemon);
-
-  useEffect(() => {
-    fetch("http://localhost:5173/pokemon.json").then((response) => {
-      response.json().then((pokemon) => {
-        setPokemon(pokemon);
-      });
-    });
-  }, []);
-
-  if (!pokemon) {
+  if (!store.pokemon) {
     return <div>Loading...</div>;
   }
 
@@ -51,4 +39,4 @@ function App() {
   );
 }
 
-export default App;
+export default observer(App);

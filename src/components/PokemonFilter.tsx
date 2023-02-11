@@ -1,14 +1,12 @@
-import useStore from "../store";
+import { observer } from "mobx-react";
+import store from "../store";
 
-export const PokemonFilter = () => {
-  const setFilter = useStore((state) => state.setFilter);
-  const filter = useStore((state) => state.filter);
-
+export const PokemonFilter = observer(() => {
   return (
     <input
       className="text-lg p-1 w-full"
-      value={filter}
-      onChange={(e) => setFilter(e.target.value)}
+      value={store.filter}
+      onChange={(e) => store.setFilter(e.target.value)}
     />
   );
-};
+});
