@@ -1,9 +1,7 @@
-import { useDispatch, useSelector } from "react-redux";
-import { PokemonState } from "../App";
+import useStore from "../store";
 
 export const PokemonInfo = () => {
-  const dispatch = useDispatch();
-  const selectedItem = useSelector((state: PokemonState) => state.selectedItem);
+  const selectedItem = useStore((state) => state.selectedItem);
 
   return selectedItem ? (
     <div className="mt-4">

@@ -1,15 +1,14 @@
-import { useDispatch, useSelector } from "react-redux";
-import { PokemonState } from "../App";
+import useStore from "../store";
 
 export const PokemonFilter = () => {
-  const dispatch = useDispatch();
-  const filter = useSelector((state: PokemonState) => state.filter);
+  const setFilter = useStore((state) => state.setFilter);
+  const filter = useStore((state) => state.filter);
 
   return (
     <input
       className="text-lg p-1 w-full"
       value={filter}
-      onChange={(e) => dispatch({ type: "setFilter", payload: e.target.value })}
+      onChange={(e) => setFilter(e.target.value)}
     />
   );
 };

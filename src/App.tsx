@@ -3,47 +3,34 @@ import "./App.css";
 import { PokemonInfo } from "./components/PokemonInfo";
 import { PokemonFilter } from "./components/PokemonFilter";
 import { PokemonTable } from "./components/PokemonTable";
+import useStore, { PokemonState } from "./store";
 import { Pokemon } from "./Pokemon";
-import { configureStore } from "@reduxjs/toolkit";
-import { Provider, useDispatch, useSelector } from "react-redux";
 
-export type PokemonState = {
-  filter: string;
-  pokemon: Pokemon[];
-  selectedItem: Pokemon | null;
-};
+// export const pokemonReducer = (state = initialState, action: any) => {
+//   switch (action.type) {
+//     case "setPokemon":
+//       return { ...state, pokemon: action.payload };
+//     case "setSelectedItem":
+//       return { ...state, selectedItem: action.payload };
+//     case "setFilter":
+//       return { ...state, filter: action.payload };
+//     default:
+//       return state;
+//   }
+// };
 
-const initialState: PokemonState = {
-  filter: "",
-  pokemon: [],
-  selectedItem: null,
-};
-
-export const pokemonReducer = (state = initialState, action: any) => {
-  switch (action.type) {
-    case "setPokemon":
-      return { ...state, pokemon: action.payload };
-    case "setSelectedItem":
-      return { ...state, selectedItem: action.payload };
-    case "setFilter":
-      return { ...state, filter: action.payload };
-    default:
-      return state;
-  }
-};
-
-const store = configureStore({
-  reducer: pokemonReducer,
-});
+// const store = configureStore({
+//   reducer: pokemonReducer,
+// });
 
 function App() {
-  const dispatch = useDispatch();
-  const pokemon = useSelector((state: PokemonState) => state.pokemon);
+  const pokemon = useStore<Pokemon[]>((state) => state.pokemon);
+  const setPokemon = useStore((state) => state.setPokemon);
 
   useEffect(() => {
     fetch("http://localhost:5173/pokemon.json").then((response) => {
       response.json().then((pokemon) => {
-        dispatch({ type: "setPokemon", payload: pokemon });
+        setPokemon(pokemon);
       });
     });
   }, []);
@@ -64,8 +51,4 @@ function App() {
   );
 }
 
-export default () => (
-  <Provider store={store}>
-    <App />
-  </Provider>
-);
+export default App;
