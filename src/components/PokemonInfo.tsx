@@ -1,10 +1,9 @@
-import { useContext } from "react";
-import { PokemonContext } from "../PokemonContext";
+import { useDispatch, useSelector } from "react-redux";
+import { PokemonState } from "../App";
 
 export const PokemonInfo = () => {
-  const {
-    state: { selectedItem },
-  } = useContext(PokemonContext);
+  const dispatch = useDispatch();
+  const selectedItem = useSelector((state: PokemonState) => state.selectedItem);
 
   return selectedItem ? (
     <div className="mt-4">

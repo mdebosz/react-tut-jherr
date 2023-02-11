@@ -1,11 +1,10 @@
-import { useContext } from "react";
-import { PokemonContext } from "../PokemonContext";
+import { useDispatch, useSelector } from "react-redux";
+import { PokemonState } from "../App";
 
 export const PokemonFilter = () => {
-  const {
-    state: { filter },
-    dispatch,
-  } = useContext(PokemonContext);
+  const dispatch = useDispatch();
+  const filter = useSelector((state: PokemonState) => state.filter);
+
   return (
     <input
       className="text-lg p-1 w-full"
